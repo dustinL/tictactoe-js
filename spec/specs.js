@@ -17,4 +17,15 @@ describe("Space", function() {
       testSpace.yCoordinate.should.equal(2);
     });
   });
+
+  describe("markBy", function() {
+    it("lets a player mark the space", function () {
+      var testPlayer = Object.create(Player);
+      testPlayer.initialize("X");
+      var testSpace = Object.create(Space);
+      testSpace.initialize(1, 2);
+      testSpace.mark(testPlayer);
+      testSpace.markedBy.should.equal(testPlayer);
+    });
+  });
 });
