@@ -18,8 +18,8 @@ describe("Space", function() {
     });
   });
 
-  describe("markBy", function() {
-    it("lets a player mark the space", function () {
+  describe("mark", function() {
+    it("lets a player mark the space", function() {
       var testPlayer = Object.create(Player);
       testPlayer.initialize("X");
       var testSpace = Object.create(Space);
@@ -27,5 +27,16 @@ describe("Space", function() {
       testSpace.mark(testPlayer);
       testSpace.markedBy.should.equal(testPlayer);
     });
+  });
+});
+
+describe("Board", function() {
+  describe("initialize", function() {
+    it("creates 9 spaces", function() {
+      var testBoard = Object.create(Board);
+      testBoard.initialize();
+      testBoard.spaces[0].xCoordinate.should.eql(1)
+      testBoard.spaces[0].yCoordinate.should.eql(1)
+    })
   });
 });
