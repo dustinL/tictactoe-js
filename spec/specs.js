@@ -28,6 +28,14 @@ describe("Space", function() {
       testSpace.markedBy.should.equal(testPlayer);
     });
   });
+
+  describe("find", function() {
+    it("returns a space given two coordinates", function() {
+      var testSpace = Object.create(Space);
+      testSpace.initialize(1, 2);
+      testSpace.find(1,2).should.eql(testSpace);
+    });
+  });
 });
 
 describe("Board", function() {

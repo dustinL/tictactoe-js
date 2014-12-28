@@ -1,13 +1,8 @@
 var Player = {
   initialize : function(symbol) {
     this.symbol = symbol;
-  },
-
-  create : function(symbol) {
-    var newPlayer = Object.create(Player);
-    newPlayer.initialize(symbol);
-    return newPlayer;
   }
+
 }
 
 var Space = {
@@ -17,10 +12,13 @@ var Space = {
     this.markedBy = false;
   },
 
-  create : function(x,y) {
-    var newSpace = Object.create(Space);
-    newSpace.initialize(x, y);
-    return newSpace;
+
+  find : function(x,y) {
+    if (this.xCoordinate === x && this.yCoordinate === y) {
+      return this;
+    } else {
+      return 0;
+    }
   },
 
   mark : function(symbol) {
@@ -36,7 +34,6 @@ var Space = {
 var Board = {
   spaces : [],
   initialize : function() {
-    // this.spaces : [];
     for (var i=1; i<=3; i++) {
       for (var j=1; j<=3; j++) {
         var currentSpace = Object.create(Space);
