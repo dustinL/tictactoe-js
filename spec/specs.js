@@ -47,4 +47,28 @@ describe("Board", function() {
       testBoard.spaces[0].yCoordinate.should.eql(1)
     })
   });
+
+  describe("playerMarks", function() {
+    it("finds and marks the appropriate space, given coordinates and player", function(){
+      var testBoard = Object.create(Board);
+      testBoard.initialize();
+      var testPlayer = Object.create(Player);
+      testPlayer.initialize("X");
+      testBoard.playerMarks(testPlayer,2,2);
+      testBoard.spaces[4].markedBy.should.eql(testPlayer);
+    });
+  });
+
+  describe("threeRow", function() {
+    it("determines if 3 spaces in a row or column are marked by the same player", function() {
+      var testBoard = Object.create(Board);
+      testBoard.initialize();
+      var testPlayer = Object.create(Player);
+      testPlayer.initialize("X");
+      testBoard.playerMarks(testPlayer,2,2);
+      testBoard.playerMarks(testPlayer,2,1);
+      testBoard.playerMarks(testPlayer,2,3);
+      testBoard.threeRow(testPlayer).should.eql(true);
+    });
+  });
 });

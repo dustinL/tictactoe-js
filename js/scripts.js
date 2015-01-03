@@ -41,5 +41,21 @@ var Board = {
         this.spaces.push(currentSpace);
       }
     }
+  },
+
+  playerMarks : function(player,x,y) {
+    this.spaces.forEach(function(space) {
+      if (space.find(x,y) !== 0) {
+        return space.markedBy = player;
+      }
+    });
+  },
+
+  threeRow : function(player) {
+    var marks = [ [0,1,2], [3,4,5], [6,7,8], [2,5,8], [1,4,7], [0,3,6], [0,4,8], [2,4,6]];
+    var board = this;
+    return marks.some(function(winning) {
+      return (board.spaces[winning[0]].markedBy === player && board.spaces[winning[1]].markedBy === player && board.spaces[winning[2]].markedBy === player);
+    });
   }
 }
