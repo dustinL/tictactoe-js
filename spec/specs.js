@@ -43,9 +43,9 @@ describe("Board", function() {
     it("creates 9 spaces", function() {
       var testBoard = Object.create(Board);
       testBoard.initialize();
-      testBoard.spaces[0].xCoordinate.should.eql(1)
-      testBoard.spaces[0].yCoordinate.should.eql(1)
-    })
+      testBoard.spaces[0].xCoordinate.should.eql(1);
+      testBoard.spaces[0].yCoordinate.should.eql(1);
+    });
   });
 
   describe("playerMarks", function() {
@@ -69,6 +69,37 @@ describe("Board", function() {
       testBoard.playerMarks(testPlayer,2,1);
       testBoard.playerMarks(testPlayer,2,3);
       testBoard.threeRow(testPlayer).should.eql(true);
+    });
+
+    it("determines if 3 spaces diagonally are marked by the same player", function () {
+      var testBoard = Object.create(Board);
+      testBoard.initialize();
+      var testPlayer = Object.create(Player);
+      testPlayer.initialize("X");
+      testBoard.playerMarks(testPlayer,1,1);
+      testBoard.playerMarks(testPlayer,2,2);
+      testBoard.playerMarks(testPlayer,3,3);
+      testBoard.threeRow(testPlayer).should.eql(true);
+    });
+  });
+});
+
+describe("Game", function() {
+  describe("initialize", function() {
+    it("creates a new game with 2 players", function() {
+      var testGame = Object.create(Game);
+      testGame.initialize("Homer", "Marge");
+      testGame.player1.name.should.eql("Homer");
+      testGame.player1.letter.symbol.should.eql('X');
+      testGame.player2.name.should.eql("Marge");
+      testGame.player2.letter.symbol.should.eql('O');
+    });
+
+    it("creates the board", function() {
+      var testGame = Object.create(Game);
+      testGame.initialize();
+      Board.isPrototypeOf(testGame.board).should.eql(true);
+      testGame.board.spaces[4].yCoordinate.should.eql(2);
     });
   });
 });

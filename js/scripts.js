@@ -1,6 +1,12 @@
 var Player = {
   initialize : function(symbol) {
     this.symbol = symbol;
+  },
+
+  create : function(symbol) {
+    var playerInstance = Object.create(Player);
+    playerInstance.initialize(symbol);
+    return playerInstance;
   }
 
 }
@@ -57,5 +63,14 @@ var Board = {
     return marks.some(function(winning) {
       return (board.spaces[winning[0]].markedBy === player && board.spaces[winning[1]].markedBy === player && board.spaces[winning[2]].markedBy === player);
     });
+  }
+}
+
+var Game = {
+  initialize : function(player1name, player2name) {
+    this.board = Object.create(Board);
+    this.board.initialize();
+    this.player1 = {name: player1name, letter: Player.create('X') };
+    this.player2 = {name: player2name, letter: Player.create('O') };
   }
 }
