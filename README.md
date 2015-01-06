@@ -1,6 +1,6 @@
 ##Tic-Tac-Toe
 
-####written by Dustin Lewis
+####written by [Dustin Lewis](https://github.com/dustinL)
 
 ==================
 

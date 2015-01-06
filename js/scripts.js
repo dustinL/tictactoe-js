@@ -114,3 +114,9 @@ var Game = {
     }
   }
 }
+
+$(document).ready(function() {
+
+
+
+})
