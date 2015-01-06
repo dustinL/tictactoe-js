@@ -106,7 +106,7 @@ describe("Game", function() {
   describe("totalMoves", function() {
     it("counts the total number of spaces marked in a game", function() {
       var testGame = Object.create(Game);
-      testGame.initialize("Bart", "Marge");
+      testGame.initialize("Martin", "Nelson");
       testGame.board.playerMarks(testGame.player1.letter,1,1);
       testGame.board.playerMarks(testGame.player2.letter,2,1);
       testGame.board.playerMarks(testGame.player1.letter,2,2);
@@ -123,6 +123,29 @@ describe("Game", function() {
       testGame.board.playerMarks("Bart",3,3);
       testGame.whoWon().should.eql("Bart");
     });
-  });
 
+    it("determines if a game has ended in a draw", function() {
+      var testGame = Object.create(Game);
+      testGame.initialize("Maggie", "Lisa");
+      testGame.board.playerMarks(testGame.player1.letter,1,1);
+      testGame.board.playerMarks(testGame.player2.letter,1,2);
+      testGame.board.playerMarks(testGame.player1.letter,1,3);
+      testGame.board.playerMarks(testGame.player2.letter,2,1);
+      testGame.board.playerMarks(testGame.player1.letter,2,2);
+      testGame.board.playerMarks(testGame.player2.letter,2,3);
+      testGame.board.playerMarks(testGame.player1.letter,3,1);
+      testGame.board.playerMarks(testGame.player2.letter,3,2);
+      testGame.board.playerMarks(testGame.player1.letter,3,3);
+      testGame.whoWon().should.eql("draw");
+    });
+
+    it("determines if a game is in progress", function() {
+      var testGame = Object.create(Game);
+      testGame.initialize("Apu", "Homer");
+      testGame.board.playerMarks(testGame.player1.letter,1,1);
+      testGame.board.playerMarks(testGame.player2.letter,2,1);
+      testGame.board.playerMarks(testGame.player1.letter,2,2);
+      testGame.whoWon().should.eql("in progress");
+    });
+  });
 });
