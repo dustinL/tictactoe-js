@@ -116,7 +116,21 @@ var Game = {
 }
 
 $(document).ready(function() {
+  $("#new-game").submit(function(event) {
+    $("#new-game").hide();
+    var player1name = $("input#player1-name").val();
+    var player2name = $("input#player2-name").val();
+    var newGame = Object.create(Game);
+    newGame.initialize(player1name, player2name);
+    if(newGame.player1.turn) {
+      $("#player-turn-symbol").text(newGame.player1.letter.symbol);
+      $("#player-turn-name").text(newGame.player1.name);
+    } else {
+      $("#player-turn-symbol").text(newGame.player2.letter.symbol);
+      $("#player-turn-name").text(newGame.player2.name);
+    };
+    $("#turn-display").show();
+    event.preventDefault();
+  });
 
-
-
-})
+});

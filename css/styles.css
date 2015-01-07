@@ -7,8 +7,36 @@
 .space-button {
   width: 100%;
   height: 100%;
+  background: #5677BF;
+
 }
 
 .jumbotron {
   background: #5677BF;
 }
+
+.spacer {
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+
+#turn-display {
+  text-align: center;
+  display: none;
+}
+
+#game-winner {
+  text-align: center;
+  display: none;
+}
+
+#game-draw {
+  text-align: center;
+  display: none;
+}
+
+#play-again {
+  text-align: center;
+  display: none;
+}
+
