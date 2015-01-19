@@ -18,14 +18,25 @@ describe("Space", function() {
     });
   });
 
-  describe("mark", function() {
+  describe("markBy", function() {
     it("lets a player mark the space", function() {
       var testPlayer = Object.create(Player);
       testPlayer.initialize("X");
       var testSpace = Object.create(Space);
       testSpace.initialize(1, 2);
-      testSpace.mark(testPlayer);
+      testSpace.markBy(testPlayer);
       testSpace.markedBy.should.equal(testPlayer);
+    });
+
+    it("does not let a player mark an already marked space", function() {
+      var testPlayer = Object.create(Player);
+      testPlayer.initialize("X");
+      var testPlayer2 = Object.create(Player);
+      testPlayer2.initialize("O");
+      var testSpace = Object.create(Space);
+      testSpace.initialize(1, 2);
+      testSpace.markBy(testPlayer);
+      testSpace.markBy(testPlayer2).should.eql("already marked");
     });
   });
 
