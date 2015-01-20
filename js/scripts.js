@@ -104,9 +104,9 @@ var Game = {
   },
 
   whoWon: function() {
-    if(this.board.threeRow(this.player1.name)) {
+    if(this.board.threeRow(this.player1.letter)) {
       return this.player1.name;
-    } else if(this.board.threeRow(this.player2.name))  {
+    } else if(this.board.threeRow(this.player2.letter))  {
       return this.player2.name;
     } else if(this.totalMoves() === 9) {
       return "draw";
@@ -123,6 +123,8 @@ var markAndChange = function(game,x,y) {
   } else if(game.player2.turn && game.board.playerMarks() !== "space taken") {
     game.board.playerMarks(game.player2.letter,x,y);
   }
+
+  console.log(game.board.playerMarks());
 
   if(game.whoWon() === "draw") {
     $("#turn-display").hide();

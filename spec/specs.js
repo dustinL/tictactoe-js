@@ -129,9 +129,9 @@ describe("Game", function() {
     it("determines who the winner is", function() {
       var testGame = Object.create(Game);
       testGame.initialize("Bart", "Marge");
-      testGame.board.playerMarks("Bart",1,1);
-      testGame.board.playerMarks("Bart",2,2);
-      testGame.board.playerMarks("Bart",3,3);
+      testGame.board.playerMarks(testGame.player1.letter,1,1);
+      testGame.board.playerMarks(testGame.player1.letter,2,2);
+      testGame.board.playerMarks(testGame.player1.letter,3,3);
       testGame.whoWon().should.eql("Bart");
     });
 
@@ -141,11 +141,11 @@ describe("Game", function() {
       testGame.board.playerMarks(testGame.player1.letter,1,1);
       testGame.board.playerMarks(testGame.player2.letter,1,2);
       testGame.board.playerMarks(testGame.player1.letter,1,3);
-      testGame.board.playerMarks(testGame.player2.letter,2,1);
-      testGame.board.playerMarks(testGame.player1.letter,2,2);
+      testGame.board.playerMarks(testGame.player2.letter,3,1);
+      testGame.board.playerMarks(testGame.player1.letter,3,2);
       testGame.board.playerMarks(testGame.player2.letter,2,3);
-      testGame.board.playerMarks(testGame.player1.letter,3,1);
-      testGame.board.playerMarks(testGame.player2.letter,3,2);
+      testGame.board.playerMarks(testGame.player1.letter,2,1);
+      testGame.board.playerMarks(testGame.player2.letter,2,2);
       testGame.board.playerMarks(testGame.player1.letter,3,3);
       testGame.whoWon().should.eql("draw");
     });
