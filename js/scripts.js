@@ -18,15 +18,7 @@ var Space = {
     this.markedBy = 0;
   },
 
-  find: function(x,y) {
-    if (this.xCoordinate === x && this.yCoordinate === y) {
-      return this;
-    } else {
-      return 0;
-    }
-  },
-
-  markBy: function(symbol) {
+  mark: function(symbol) {
     if (this.markedBy) {
       return "already marked";
     } else {
@@ -48,14 +40,14 @@ var Board = {
     }
   },
 
-  playerMarks: function(player,x,y) {
+  findSpace: function(x,y) {
+    var foundSpace;
     this.spaces.forEach(function(space) {
-      if (space.find(x,y) !== 0 && space.markedBy !== "already marked") {
-        return space.markedBy = player;
-      } else {
-        return "space taken";
+      if (space.xCoordinate === x && space.yCoordinate === y) {
+        foundSpace = space;
       }
     });
+    return foundSpace;
   },
 
   threeRow: function(player) {
@@ -71,8 +63,8 @@ var Game = {
   initialize: function(player1name, player2name) {
     this.board = Object.create(Board);
     this.board.initialize();
-    this.player1 = {name: player1name, letter: Player.create('X'), turn: true };
-    this.player2 = {name: player2name, letter: Player.create('O'), turn: false };
+    this.player1 = {name: player1name, player: Player.create('X'), turn: true };
+    this.player2 = {name: player2name, player: Player.create('O'), turn: false };
 
     if(Math.random() >= .5) {
       this.player1.turn = true;
@@ -93,10 +85,14 @@ var Game = {
     }
   },
 
+  currentPlayer: function() {
+    return this.player1.turn ? this.player1 : this.player2
+  },
+
   totalMoves: function() {
     var moves = 0;
     for (var i=0; i < 9; i++) {
-      if(this.board.spaces[i].markedBy === this.player1.letter || this.board.spaces[i].markedBy === this.player2.letter) {
+      if(this.board.spaces[i].markedBy === this.player1.player || this.board.spaces[i].markedBy === this.player2.player) {
         moves += 1;
       }
     }
@@ -104,9 +100,9 @@ var Game = {
   },
 
   whoWon: function() {
-    if(this.board.threeRow(this.player1.letter)) {
+    if(this.board.threeRow(this.player1.player)) {
       return this.player1.name;
-    } else if(this.board.threeRow(this.player2.letter))  {
+    } else if(this.board.threeRow(this.player2.player))  {
       return this.player2.name;
     } else if(this.totalMoves() === 9) {
       return "draw";
@@ -117,14 +113,8 @@ var Game = {
 }
 
 var markAndChange = function(game,x,y) {
-  //check if space is open!! and it's player's turn
-  if(game.player1.turn && game.board.playerMarks()  !== "space taken") {
-    game.board.playerMarks(game.player1.letter,x,y);
-  } else if(game.player2.turn && game.board.playerMarks() !== "space taken") {
-    game.board.playerMarks(game.player2.letter,x,y);
-  }
-
-  console.log(game.board.playerMarks());
+  var currentSpace = game.board.findSpace(x,y);
+  currentSpace.mark(game.currentPlayer().player)
 
   if(game.whoWon() === "draw") {
     $("#turn-display").hide();
@@ -137,12 +127,15 @@ var markAndChange = function(game,x,y) {
     $("#play-again").show();
   }
 
+  console.log(game.board.threeRow());
+  console.log(game.totalMoves());
+
   game.changeTurn();
   if(game.player1.turn) {
-    $("#player-turn-symbol").text(game.player1.letter.symbol);
+    $("#player-turn-symbol").text(game.player1.player.symbol);
     $("#player-turn-name").text(game.player1.name);
   } else {
-    $("#player-turn-symbol").text(game.player2.letter.symbol);
+    $("#player-turn-symbol").text(game.player2.player.symbol);
     $("#player-turn-name").text(game.player2.name);
   }
 }
@@ -161,22 +154,27 @@ $(document).ready(function() {
     var newGame = Object.create(Game);
     newGame.initialize(player1name, player2name);
     if(newGame.player1.turn) {
-      $("#player-turn-symbol").text(newGame.player1.letter.symbol);
+      $("#player-turn-symbol").text(newGame.player1.player.symbol);
       $("#player-turn-name").text(newGame.player1.name);
     } else {
-      $("#player-turn-symbol").text(newGame.player2.letter.symbol);
+      $("#player-turn-symbol").text(newGame.player2.player.symbol);
       $("#player-turn-name").text(newGame.player2.name);
     };
     $("#turn-display").show();
 
     var clickSpace = function(spaceID,x,y) {
       $(spaceID).click(function(event) {
-        if(newGame.player1.turn) {
-          $(spaceID).text(newGame.player1.letter.symbol);
+        var space = newGame.board.findSpace(x,y)
+        if (space.markedBy) {
+          return("taken")
         } else {
-          $(spaceID).text(newGame.player2.letter.symbol);
+          if(newGame.player1.turn) {
+            $(spaceID).text(newGame.player1.player.symbol);
+          } else {
+            $(spaceID).text(newGame.player2.player.symbol);
+          }
+          markAndChange(newGame,x,y);
         }
-        markAndChange(newGame,x,y);
       });
     }
 

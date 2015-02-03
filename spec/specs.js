@@ -18,13 +18,13 @@ describe("Space", function() {
     });
   });
 
-  describe("markBy", function() {
+  describe("mark", function() {
     it("lets a player mark the space", function() {
       var testPlayer = Object.create(Player);
       testPlayer.initialize("X");
       var testSpace = Object.create(Space);
       testSpace.initialize(1, 2);
-      testSpace.markBy(testPlayer);
+      testSpace.mark(testPlayer);
       testSpace.markedBy.should.equal(testPlayer);
     });
 
@@ -35,16 +35,8 @@ describe("Space", function() {
       testPlayer2.initialize("O");
       var testSpace = Object.create(Space);
       testSpace.initialize(1, 2);
-      testSpace.markBy(testPlayer);
-      testSpace.markBy(testPlayer2).should.eql("already marked");
-    });
-  });
-
-  describe("find", function() {
-    it("returns a space given two coordinates", function() {
-      var testSpace = Object.create(Space);
-      testSpace.initialize(1, 2);
-      testSpace.find(1,2).should.eql(testSpace);
+      testSpace.mark(testPlayer);
+      testSpace.mark(testPlayer2).should.eql("already marked");
     });
   });
 });
@@ -59,38 +51,35 @@ describe("Board", function() {
     });
   });
 
-  describe("playerMarks", function() {
-    it("finds and marks the appropriate space, given coordinates and player", function(){
+  describe("findSpace", function() {
+    it("returns a space object from given coordinates", function() {
       var testBoard = Object.create(Board);
       testBoard.initialize();
-      var testPlayer = Object.create(Player);
-      testPlayer.initialize("X");
-      testBoard.playerMarks(testPlayer,2,2);
-      testBoard.spaces[4].markedBy.should.eql(testPlayer);
+      var thisSpace = testBoard.findSpace(1,2);
+      thisSpace.xCoordinate.should.eql(1);
+      thisSpace.yCoordinate.should.eql(2);
     });
   });
 
   describe("threeRow", function() {
     it("determines if 3 spaces in a row or column are marked by the same player", function() {
-      var testBoard = Object.create(Board);
-      testBoard.initialize();
-      var testPlayer = Object.create(Player);
-      testPlayer.initialize("X");
-      testBoard.playerMarks(testPlayer,2,2);
-      testBoard.playerMarks(testPlayer,2,1);
-      testBoard.playerMarks(testPlayer,2,3);
-      testBoard.threeRow(testPlayer).should.eql(true);
+      var testGame = Object.create(Game);
+      testGame.initialize();
+      var testPlayer = testGame.player1.player;
+      testGame.board.spaces[0].mark(testPlayer);
+      testGame.board.spaces[1].mark(testPlayer);
+      testGame.board.spaces[2].mark(testPlayer);
+      testGame.board.threeRow(testPlayer).should.eql(true);
     });
 
     it("determines if 3 spaces diagonally are marked by the same player", function () {
-      var testBoard = Object.create(Board);
-      testBoard.initialize();
-      var testPlayer = Object.create(Player);
-      testPlayer.initialize("X");
-      testBoard.playerMarks(testPlayer,1,1);
-      testBoard.playerMarks(testPlayer,2,2);
-      testBoard.playerMarks(testPlayer,3,3);
-      testBoard.threeRow(testPlayer).should.eql(true);
+      var testGame2 = Object.create(Game);
+      testGame2.initialize();
+      var testPlayer = testGame2.player1.player;
+      testGame2.board.spaces[0].mark(testPlayer);
+      testGame2.board.spaces[4].mark(testPlayer);
+      testGame2.board.spaces[8].mark(testPlayer);
+      testGame2.board.threeRow(testPlayer).should.eql(true);
     });
   });
 });
@@ -101,9 +90,9 @@ describe("Game", function() {
       var testGame = Object.create(Game);
       testGame.initialize("Homer", "Marge");
       testGame.player1.name.should.eql("Homer");
-      testGame.player1.letter.symbol.should.eql('X');
+      testGame.player1.player.symbol.should.eql('X');
       testGame.player2.name.should.eql("Marge");
-      testGame.player2.letter.symbol.should.eql('O');
+      testGame.player2.player.symbol.should.eql('O');
     });
 
     it("creates the board", function() {
@@ -117,10 +106,12 @@ describe("Game", function() {
   describe("totalMoves", function() {
     it("counts the total number of spaces marked in a game", function() {
       var testGame = Object.create(Game);
-      testGame.initialize("Martin", "Nelson");
-      testGame.board.playerMarks(testGame.player1.letter,1,1);
-      testGame.board.playerMarks(testGame.player2.letter,2,1);
-      testGame.board.playerMarks(testGame.player1.letter,2,2);
+      testGame.initialize();
+      var testPlayer1 = testGame.player1.player;
+      var testPlayer2 = testGame.player2.player;
+      testGame.board.spaces[0].mark(testPlayer1);
+      testGame.board.spaces[1].mark(testPlayer2);
+      testGame.board.spaces[2].mark(testPlayer1);
       testGame.totalMoves().should.eql(3);
     });
   });
@@ -129,33 +120,36 @@ describe("Game", function() {
     it("determines who the winner is", function() {
       var testGame = Object.create(Game);
       testGame.initialize("Bart", "Marge");
-      testGame.board.playerMarks(testGame.player1.letter,1,1);
-      testGame.board.playerMarks(testGame.player1.letter,2,2);
-      testGame.board.playerMarks(testGame.player1.letter,3,3);
+      var testPlayer1 = testGame.player1.player;
+      testGame.board.spaces[6].mark(testPlayer1);
+      testGame.board.spaces[7].mark(testPlayer1);
+      testGame.board.spaces[8].mark(testPlayer1);
       testGame.whoWon().should.eql("Bart");
     });
 
     it("determines if a game has ended in a draw", function() {
       var testGame = Object.create(Game);
       testGame.initialize("Maggie", "Lisa");
-      testGame.board.playerMarks(testGame.player1.letter,1,1);
-      testGame.board.playerMarks(testGame.player2.letter,1,2);
-      testGame.board.playerMarks(testGame.player1.letter,1,3);
-      testGame.board.playerMarks(testGame.player2.letter,3,1);
-      testGame.board.playerMarks(testGame.player1.letter,3,2);
-      testGame.board.playerMarks(testGame.player2.letter,2,3);
-      testGame.board.playerMarks(testGame.player1.letter,2,1);
-      testGame.board.playerMarks(testGame.player2.letter,2,2);
-      testGame.board.playerMarks(testGame.player1.letter,3,3);
+      testGame.board.spaces[0].mark(testGame.player1.player);
+      testGame.board.spaces[1].mark(testGame.player2.player);
+      testGame.board.spaces[2].mark(testGame.player1.player);
+      testGame.board.spaces[6].mark(testGame.player2.player);
+      testGame.board.spaces[7].mark(testGame.player1.player);
+      testGame.board.spaces[5].mark(testGame.player2.player);
+      testGame.board.spaces[3].mark(testGame.player1.player);
+      testGame.board.spaces[4].mark(testGame.player2.player);
+      testGame.board.spaces[8].mark(testGame.player1.player);
       testGame.whoWon().should.eql("draw");
     });
 
     it("determines if a game is in progress", function() {
       var testGame = Object.create(Game);
       testGame.initialize("Apu", "Homer");
-      testGame.board.playerMarks(testGame.player1.letter,1,1);
-      testGame.board.playerMarks(testGame.player2.letter,2,1);
-      testGame.board.playerMarks(testGame.player1.letter,2,2);
+      var testPlayer1 = testGame.player1.player;
+      var testPlayer2 = testGame.player2.player;
+      testGame.board.spaces[0].mark(testPlayer1);
+      testGame.board.spaces[3].mark(testPlayer2);
+      testGame.board.spaces[4].mark(testPlayer1);
       testGame.whoWon().should.eql("in progress");
     });
   });
