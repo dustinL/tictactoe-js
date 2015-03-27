@@ -127,9 +127,6 @@ var markAndChange = function(game,x,y) {
     $("#play-again").show();
   }
 
-  console.log(game.board.threeRow());
-  console.log(game.totalMoves());
-
   game.changeTurn();
   if(game.player1.turn) {
     $("#player-turn-symbol").text(game.player1.player.symbol);
